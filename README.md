@@ -4,8 +4,8 @@ A personal collection of Flutter practice projects, each stored in a separate Gi
 
 ---
 
-## 📂 Branch-wise Topics
+## 📂 Branch-wise Projects
 
-| Topic             | Branch Name            | Link                                                                 |
+| Projects Name             | Branch Name            | Link                                                                 |
 |------------------|------------------------|----------------------------------------------------------------------|
-| ✅ 1. Pending | `pending`               | [View Branch](https://github.com/monir996/flutter-projects/tree/pending) |
+| ✅ 1. Mini ToDo with Hive Local Database | `mini_todo`               | [View Branch](https://github.com/monir996/flutter-projects/tree/mini_todo) |
