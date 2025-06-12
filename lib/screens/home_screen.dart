@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:hive/hive.dart';
-import '../data/local_database.dart';
+import 'package:provider/provider.dart';
 import '../model/todo.dart';
 import '../constants/colors.dart';
+import '../provider/theme_provider.dart';
+import '../provider/todo_provider.dart';
 import '../widgets/todo_item.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -16,34 +17,11 @@ class _HomeScreenState extends State<HomeScreen> {
 
   /*------------------------- Variables ------------------------*/
 
-  final _myBox = Hive.box('myBox'); //Reference the HiveBox
-  TodoDatabase todoDatabase = TodoDatabase();
-
-  final todoList = ToDo.todoList();
-  List<ToDo> _foundTodo = []; // Empty List For Search Item
-
   final _textController = TextEditingController();
   final TextEditingController _searchController = TextEditingController();
 
   final FocusNode _focusNode = FocusNode(); // For Remove TextField Focus
-  String _searchKeyword = '';
 
-
-  /*------------------------- initiate ------------------------*/
-  @override
-  void initState() {
-
-    if(_myBox.get("TODOLIST") == null){
-      todoDatabase.todoList = [];
-    }
-    else {
-      //There already exists data
-      todoDatabase.loadData();
-    }
-    _foundTodo = todoDatabase.todoList;
-
-    super.initState();
-  }
 
   /*------------------------- Dispose ------------------------*/
   @override
@@ -55,23 +33,58 @@ class _HomeScreenState extends State<HomeScreen> {
 
   @override
   Widget build(BuildContext context) {
+
+    List<ToDo> displayList = Provider.of<TodoProvider>(context).filteredTodos;
+    final themeProvider = Provider.of<ThemeProvider>(context);
+
+
     return WillPopScope(
 
       onWillPop: () async {
         if (_searchController.text.isNotEmpty) {
-          setState(() {
-            _searchController.clear();
-            _runFilter('');
-          });
+          _searchController.clear();
           return false; // Block Back Button
         }
         return true; // Close app with Back Button
       },
 
       child: Scaffold(
-        backgroundColor: tdBgColor,
+        //backgroundColor: tdBgColor,
 
         appBar: _buildAppBar(),
+
+        onDrawerChanged: (isOpened) {
+          if (!isOpened) {
+            if (_focusNode.hasFocus) {
+              _focusNode.unfocus();
+            }
+          }
+        },
+
+        drawer: Drawer(
+          child: ListView(
+            children: [
+              DrawerHeader(
+                  padding: EdgeInsets.zero,
+                  child: Image.asset("assets/images/todo_splash.png")
+              ),
+
+              ListTile(
+                  onTap: (){ Navigator.pop(context); },
+                  title: Text("Dark Theme"),
+                  trailing: Transform.scale(
+                    scale: 0.7,
+                    child: Switch(
+                        value: themeProvider.isDarkMode,
+                        onChanged: (value) {
+                          themeProvider.toggleTheme(value);
+                        },
+                    ),
+                  )
+              ),
+            ],
+          ),
+        ),
 
         body: SafeArea(
 
@@ -89,7 +102,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
                       /*------------------------------ List View --------------------------*/
                       Expanded(
-                        child: _foundTodo.isEmpty? Center(
+                        child: displayList.isEmpty? Center(
                             child: Text(
                               'No ToDos Yet!',
                               style: TextStyle(fontSize: 18, color: tdGrey),
@@ -97,6 +110,7 @@ class _HomeScreenState extends State<HomeScreen> {
                         )
                         :
                         ListView(
+                          padding: EdgeInsets.only(bottom: 100),
                           children: [
 
                             Container(
@@ -107,7 +121,7 @@ class _HomeScreenState extends State<HomeScreen> {
                               ),
                             ),
 
-                            for( ToDo todo in _foundTodo.reversed)
+                            for( ToDo todo in displayList.reversed)
                               TodoItem(
                                 todo: todo,
                                 onToDoChanged: _handleTodoChange,
@@ -145,10 +159,12 @@ class _HomeScreenState extends State<HomeScreen> {
 
                           /*------------------------------ Text Field --------------------------*/
                           child: TextField(
+                            focusNode: _focusNode,
                             controller: _textController,
+                            style: TextStyle(color: tdBlack),
                             decoration: InputDecoration(
                               hintText: 'Add a new task',
-                              border: InputBorder.none
+                              border: InputBorder.none,
                             ),
                           ),
                         ),
@@ -161,8 +177,8 @@ class _HomeScreenState extends State<HomeScreen> {
                             onPressed: (){
                               _addNewToDoItem(_textController.text);
                             },
-                            backgroundColor: tdBlue,
-                            child: Icon(Icons.add, color: Colors.white,),
+                            backgroundColor: themeProvider.isDarkMode ? Colors.white : tdBlue,
+                            child: Icon(Icons.add, color: themeProvider.isDarkMode ? tdBlack : Colors.white),
                         ),
                       )
                     ],
@@ -181,46 +197,22 @@ class _HomeScreenState extends State<HomeScreen> {
 
 /*------------------------------ Handle ToDos --------------------------*/
 void _handleTodoChange(ToDo todo){
-  setState(() {
-    todo.isDone = !todo.isDone;
-  });
-  todoDatabase.updateDatabase();
+  Provider.of<TodoProvider>(context, listen: false).toggleDone(todo);
 }
 
 /*------------------------------ Delete ToDos Item --------------------------*/
 void _deleteTodoItem(String id){
-  setState(() {
-    todoDatabase.todoList.removeWhere((item) => item.id == id);
-  });
-  todoDatabase.updateDatabase();
-  _runFilter(_searchKeyword);
+  Provider.of<TodoProvider>(context, listen: false).deleteTodo(id);
 }
 
 /*------------------------------ Create New To Do --------------------------*/
 void _addNewToDoItem(String todo){
-  setState(() {
-    if(_textController.text.isNotEmpty){
-      todoDatabase.todoList.add(ToDo(id: DateTime.now().millisecondsSinceEpoch.toString(), todoText: todo));
-    }
-  });
+
+  if(_textController.text.isNotEmpty) {
+      Provider.of<TodoProvider>(context, listen: false).addTodo(todo);
+  }
   _textController.clear();
   _focusNode.unfocus();
-}
-
-/*------------------------------ Search To Do Item --------------------------*/
-void _runFilter(String enteredKeyword){
-  List<ToDo> results = [];
-
-  if(enteredKeyword.isEmpty){
-    results = todoDatabase.todoList;
-  }
-  else{
-    results = todoDatabase.todoList.where((item) => item.todoText!.toLowerCase().contains(enteredKeyword.toLowerCase())).toList();
-  }
-
-  setState(() {
-    _foundTodo = results; // Search Result
-  });
 }
 
 
@@ -235,8 +227,7 @@ void _runFilter(String enteredKeyword){
       child: TextField(
         controller: _searchController,
         onChanged: (value) {
-          _searchKeyword = value;
-          _runFilter(value);
+          Provider.of<TodoProvider>(context, listen: false).search(value);
         },
         decoration: InputDecoration(
             contentPadding: EdgeInsets.all(0),
@@ -253,12 +244,12 @@ void _runFilter(String enteredKeyword){
   /*------------------------------ AppBar --------------------------*/
   AppBar _buildAppBar() {
     return AppBar(
-      backgroundColor: tdBgColor,
+      //backgroundColor: tdBgColor,
       elevation: 0,
+      scrolledUnderElevation: 0,
       title: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        mainAxisAlignment: MainAxisAlignment.end,
         children: [
-          Icon(Icons.menu, color: tdBlack, size: 30),
 
           SizedBox(
             height: 40,
@@ -268,6 +259,7 @@ void _runFilter(String enteredKeyword){
               child: Image.asset('assets/images/avatar.webp'),
             ),
           )
+
         ],
       ),
 

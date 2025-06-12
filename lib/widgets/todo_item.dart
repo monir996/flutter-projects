@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import '../constants/colors.dart';
 import '../model/todo.dart';
+import '../provider/theme_provider.dart';
 
 class TodoItem extends StatelessWidget {
 
@@ -12,6 +14,9 @@ class TodoItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+
+    final themeProvider = Provider.of<ThemeProvider>(context);
+
     return Container(
 
         margin: EdgeInsets.only(bottom: 20),
@@ -26,7 +31,7 @@ class TodoItem extends StatelessWidget {
             borderRadius: BorderRadius.circular(20)
           ),
 
-          tileColor: Colors.white,
+          tileColor: themeProvider.isDarkMode ? tdBgColor : Colors.white,
 
           /*------------------------------ To Do CheckBox --------------------------*/
           leading: Icon(
@@ -40,7 +45,10 @@ class TodoItem extends StatelessWidget {
             style: TextStyle(
                 fontSize: 16,
                 color: tdBlack,
-                decoration: todo.isDone ? TextDecoration.lineThrough : TextDecoration.none
+                decoration: todo.isDone ? TextDecoration.lineThrough : TextDecoration.none,
+                decorationColor: tdBlack ,
+                decorationThickness: 2,
+
             ),
           ),
 
