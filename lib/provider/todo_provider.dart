@@ -10,6 +10,8 @@ class TodoProvider extends ChangeNotifier {
   List<ToDo> get todos => _todos;
   String _searchKeyword = '';
 
+  bool get isSearching => _searchKeyword.isNotEmpty;
+
   TodoProvider() {
     loadTodos();
   }

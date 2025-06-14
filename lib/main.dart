@@ -1,13 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:hive/hive.dart';
-import 'package:hive_flutter/adapters.dart';
-import 'package:mini_todo/constants/colors.dart';
-import 'package:mini_todo/provider/theme_provider.dart';
-import 'package:mini_todo/provider/todo_provider.dart';
 import 'package:provider/provider.dart';
+import 'package:hive_flutter/adapters.dart';
+import '../constants/colors.dart';
+import '../provider/theme_provider.dart';
+import '../provider/todo_provider.dart';
+import '../screens/about_screen.dart';
+import '../screens/settings_screen.dart';
 import '../screens/home_screen.dart';
-import 'data/todo_adapter.dart';
+import '../data/todo_adapter.dart';
 
 Future<void> main() async {
 
@@ -16,7 +17,10 @@ Future<void> main() async {
   /*------------------------- Initiate Hive Database ------------------------*/
   await Hive.initFlutter();
   Hive.registerAdapter(ToDoAdapter()); // Register the adapter
-  await Hive.openBox('myBox'); //Open the box
+
+  await Hive.openBox('myBox'); //Open the box for To Do List
+  await Hive.openBox('settings'); // for theme settings
+
 
   runApp(
     MultiProvider(
@@ -45,20 +49,21 @@ class MyApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       themeMode: themeProvider.themeMode,
 
+      //theme: ThemeData.light(),
+      //darkTheme: ThemeData.dark(),
+
       theme: ThemeData(
         brightness: Brightness.light,
-        primarySwatch: Colors.blue,
         scaffoldBackgroundColor: tdBgColor,
         appBarTheme: AppBarTheme(
           backgroundColor: tdBgColor,
-          foregroundColor: Colors.black, // Text, icon color
+          foregroundColor: tdBlack, // Text, icon color
           elevation: 0,
         ),
       ),
 
       darkTheme: ThemeData(
         brightness: Brightness.dark,
-        primarySwatch: Colors.blue,
         scaffoldBackgroundColor: tdBlack,
         appBarTheme: AppBarTheme(
           backgroundColor: tdBlack,
@@ -68,6 +73,11 @@ class MyApp extends StatelessWidget {
       ),
 
       home: HomeScreen(),
+
+      routes: {
+        '/about' : (context) => AboutScreen(),
+        '/settings' : (context) => SettingsScreen(),
+      },
     );
   }
 }

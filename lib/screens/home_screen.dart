@@ -35,7 +35,9 @@ class _HomeScreenState extends State<HomeScreen> {
   Widget build(BuildContext context) {
 
     List<ToDo> displayList = Provider.of<TodoProvider>(context).filteredTodos;
-    final themeProvider = Provider.of<ThemeProvider>(context);
+    bool isSearching = Provider.of<TodoProvider>(context).isSearching;
+
+    final isDark = Theme.of(context).brightness == Brightness.dark;
 
 
     return WillPopScope(
@@ -62,26 +64,33 @@ class _HomeScreenState extends State<HomeScreen> {
         },
 
         drawer: Drawer(
+          backgroundColor: isDark? Colors.black : tdBgColor,
           child: ListView(
             children: [
               DrawerHeader(
                   padding: EdgeInsets.zero,
-                  child: Image.asset("assets/images/todo_splash.png")
+                  child: Image.asset("assets/images/todo-logo.png")
               ),
 
               ListTile(
-                  onTap: (){ Navigator.pop(context); },
-                  title: Text("Dark Theme"),
-                  trailing: Transform.scale(
-                    scale: 0.7,
-                    child: Switch(
-                        value: themeProvider.isDarkMode,
-                        onChanged: (value) {
-                          themeProvider.toggleTheme(value);
-                        },
-                    ),
-                  )
+                onTap: (){
+                  Navigator.pop(context);
+                  Navigator.pushNamed(context, '/settings');
+                },
+                title: Text("Settings"),
+                trailing: Icon(Icons.settings_outlined),
               ),
+
+              ListTile(
+                onTap: (){
+                  Navigator.pop(context);
+                  Navigator.pushNamed(context, '/about');
+                },
+                title: Text("About"),
+                trailing: Icon(Icons.info_outline),
+              ),
+
+
             ],
           ),
         ),
@@ -104,7 +113,7 @@ class _HomeScreenState extends State<HomeScreen> {
                       Expanded(
                         child: displayList.isEmpty? Center(
                             child: Text(
-                              'No ToDos Yet!',
+                              isSearching ? 'No search results found.' : 'No ToDos Yet.',
                               style: TextStyle(fontSize: 18, color: tdGrey),
                             )
                         )
@@ -145,7 +154,7 @@ class _HomeScreenState extends State<HomeScreen> {
                           padding: EdgeInsets.symmetric(horizontal: 20, vertical: 5),
 
                           decoration: BoxDecoration(
-                            color: Colors.white,
+                            color: tdBgColor,
                             boxShadow: [
                               BoxShadow(
                                   color: Colors.grey,
@@ -177,8 +186,9 @@ class _HomeScreenState extends State<HomeScreen> {
                             onPressed: (){
                               _addNewToDoItem(_textController.text);
                             },
-                            backgroundColor: themeProvider.isDarkMode ? Colors.white : tdBlue,
-                            child: Icon(Icons.add, color: themeProvider.isDarkMode ? tdBlack : Colors.white),
+                            backgroundColor: isDark ? Colors.white : tdBlue,
+                            child: Icon(Icons.add, color: isDark ? tdBlack : Colors.white),
+
                         ),
                       )
                     ],

@@ -15,7 +15,7 @@ class TodoItem extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
 
-    final themeProvider = Provider.of<ThemeProvider>(context);
+    final isDark = Theme.of(context).brightness == Brightness.dark;
 
     return Container(
 
@@ -31,7 +31,7 @@ class TodoItem extends StatelessWidget {
             borderRadius: BorderRadius.circular(20)
           ),
 
-          tileColor: themeProvider.isDarkMode ? tdBgColor : Colors.white,
+          tileColor: isDark ? Colors.black : Colors.white,
 
           /*------------------------------ To Do CheckBox --------------------------*/
           leading: Icon(
@@ -44,9 +44,9 @@ class TodoItem extends StatelessWidget {
             todo.todoText!,
             style: TextStyle(
                 fontSize: 16,
-                color: tdBlack,
+                color: isDark ? Colors.white : tdBlack,
                 decoration: todo.isDone ? TextDecoration.lineThrough : TextDecoration.none,
-                decorationColor: tdBlack ,
+                decorationColor: isDark ? Colors.white : tdBlack,
                 decorationThickness: 2,
 
             ),
