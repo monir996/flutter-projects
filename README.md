@@ -1,4 +1,4 @@
-# 📘 Flutter Projects
+# 📘 Flutter Complete Functional Projects
 
 A personal collection of Flutter practice projects, each stored in a separate Git branch.
 
