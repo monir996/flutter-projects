@@ -33,6 +33,7 @@ class _HomePageState extends State<HomePage> {
     return Scaffold(
       backgroundColor: bgColor,
       appBar: AppBar(backgroundColor: bgColor, scrolledUnderElevation: 0),
+
       drawer: Drawer(
         child: Stack(
           children: [
