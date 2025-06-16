@@ -10,6 +10,7 @@ class WelcomePage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: bgColor,
+
       body: Center(
         child: Padding(
           padding: const EdgeInsets.all(25.0),
