@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:sushi_restaurant/models/shop.dart';
 import 'package:sushi_restaurant/pages/cart_page.dart';
-import '../pages/food_details_page.dart';
 import '../pages/menu_page.dart';
 import '../pages/welcome_page.dart';
 
