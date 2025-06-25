@@ -1,6 +1,6 @@
 import 'package:daily_do/components/dialog_box.dart';
 import 'package:flutter/material.dart';
-import '../components/card_widget.dart';
+import '../components/todo_card.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -124,7 +124,7 @@ class _HomePageState extends State<HomePage> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
 
-                  CardWidget(
+                  TodoCard(
                       count: activeTasksCount.toString(),
                       text: 'Active',
                       color: Colors.deepOrange,
@@ -137,7 +137,7 @@ class _HomePageState extends State<HomePage> {
 
                   SizedBox(width: 20),
 
-                  CardWidget(
+                  TodoCard(
                       count: completedTasksCount.toString(),
                       text: 'Completed',
                       color: Colors.green,

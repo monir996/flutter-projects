@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 
-class CardWidget extends StatelessWidget {
+class TodoCard extends StatelessWidget {
   String count, text;
   Color color;
   final onTap;
 
-  CardWidget({
+  TodoCard({
     super.key,
     required this.count,
     required this.text,
@@ -37,6 +37,7 @@ class CardWidget extends StatelessWidget {
         child: Container(
           width: cardWidth,
           height: cardHeight,
+          alignment: Alignment.center,
           decoration: BoxDecoration(
               color: color,
               borderRadius: BorderRadius.circular(10),
