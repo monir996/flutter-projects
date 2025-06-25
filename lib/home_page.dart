@@ -14,8 +14,8 @@ class _HomePageState extends State<HomePage> {
   //List<Map<String, dynamic>> tasks = [];
 
   List toDoList = [
-    ['Make Tutorial', false],
-    ['Exercise', false]
+    ['Morning Walk', false],
+    ['Do Exercise', false]
   ];
 
   bool showActiveTask = true;
@@ -177,7 +177,9 @@ class _HomePageState extends State<HomePage> {
                       SizedBox(height: 10),
 
                       Expanded(
-                        child: ListView.builder(
+                        child: toDoList.isEmpty
+                            ? Center(child: Text('No ToDos yet.'))
+                            : ListView.builder(
                             itemCount: filteredTodos.length,
                             itemBuilder: (context, index) {
 
@@ -228,11 +230,11 @@ class _HomePageState extends State<HomePage> {
                                       ),
 
                                       title: Text(
-                                          filteredTodos[index][0],
-                                          style: TextStyle(
-                                              fontSize: 16,
-                                              decoration: filteredTodos[index][1] ? TextDecoration.lineThrough : null
-                                          ),
+                                        filteredTodos[index][0],
+                                        style: TextStyle(
+                                            fontSize: 16,
+                                            decoration: filteredTodos[index][1] ? TextDecoration.lineThrough : null
+                                        ),
                                       ),
 
                                       trailing: Row(
