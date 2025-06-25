@@ -9,6 +9,7 @@ A personal collection of Flutter practice projects, each stored in a separate Gi
 | Projects Name             | Branch Name            | Link                                                                       | Technologies Used |
 |------------------|------------------------|----------------------------------------------------------------------|-----------------------------------
 | ✅ 1. Mini ToDo | `mini_todo`               | [View Branch](https://github.com/monir996/flutter-projects/tree/mini_todo) | Hive Local Database, Provider State Management |
+| ✅ 2. DailyDo (No Database) | `daily_do`               | [View Branch](https://github.com/monir996/flutter-projects/tree/daily_do) | - |
 
 <br> <br> <br>
 
