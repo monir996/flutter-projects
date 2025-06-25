@@ -19,7 +19,7 @@ class CardWidget extends StatelessWidget {
     double screenWidth = MediaQuery.of(context).size.width;
     double screenHeight = MediaQuery.of(context).size.height;
 
-    double cardWidth = (screenWidth * 0.40).clamp(120.0, 400.0);
+    double cardWidth = (screenWidth * 0.33).clamp(70.0, 200.0);
 
     double? cardHeight = screenHeight < 600 ? null : screenHeight * 0.18;
 

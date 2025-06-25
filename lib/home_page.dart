@@ -118,7 +118,7 @@ class _HomePageState extends State<HomePage> {
           child: Column(
             children: [
               Row(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                mainAxisAlignment: MainAxisAlignment.center,
                 children: [
 
                   CardWidget(
@@ -131,6 +131,8 @@ class _HomePageState extends State<HomePage> {
                         });
                       },
                   ),
+
+                  SizedBox(width: 20),
 
                   CardWidget(
                       count: completedTasksCount.toString(),
