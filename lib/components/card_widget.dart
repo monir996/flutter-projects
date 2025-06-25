@@ -16,6 +16,16 @@ class CardWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
 
+    double screenWidth = MediaQuery.of(context).size.width;
+    double screenHeight = MediaQuery.of(context).size.height;
+
+    double cardWidth = (screenWidth * 0.40).clamp(120.0, 400.0);
+
+    double? cardHeight = screenHeight < 600 ? null : screenHeight * 0.18;
+
+    double countFontSize = (screenWidth * 0.06).clamp(18.0, 26.0);
+    double textFontSize = (screenWidth * 0.045).clamp(14.0, 20.0);
+
     return Card(
       elevation: 4,
       shape: RoundedRectangleBorder(
@@ -25,7 +35,8 @@ class CardWidget extends StatelessWidget {
         onTap: onTap,
 
         child: Container(
-          width: 200,
+          width: cardWidth,
+          height: cardHeight,
           decoration: BoxDecoration(
               color: color,
               borderRadius: BorderRadius.circular(10),
@@ -37,8 +48,8 @@ class CardWidget extends StatelessWidget {
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: [
-                Text(count, style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold, color: Colors.white)),
-                Text(text, style: TextStyle(fontSize: 20, fontWeight: FontWeight.w500, color: Colors.white))
+                Text(count, style: TextStyle(fontSize: countFontSize, fontWeight: FontWeight.bold, color: Colors.white)),
+                Text(text, style: TextStyle(fontSize: textFontSize, fontWeight: FontWeight.w500, color: Colors.white))
               ],
             ),
           ),

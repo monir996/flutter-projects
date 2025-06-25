@@ -100,9 +100,9 @@ class _HomePageState extends State<HomePage> {
     
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Colors.blue,
+        backgroundColor: Colors.blueAccent,
         foregroundColor: Colors.white,
-        title: Text('DailyDo'),
+        title: Text('DailyDo', style: TextStyle(fontWeight: FontWeight.bold),),
         centerTitle: true,
       ),
 
