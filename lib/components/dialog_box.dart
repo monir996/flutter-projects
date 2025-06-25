@@ -31,7 +31,7 @@ class _DialogBoxState extends State<DialogBox> {
       content: TextField(
         controller: widget.controller,
         decoration: InputDecoration(
-          hintText: 'Write your task here',
+          hintText: 'Write your task here...',
           errorText: _errorText,
         ),
       ),
@@ -47,6 +47,7 @@ class _DialogBoxState extends State<DialogBox> {
               setState(() => _errorText = 'Task cannot be empty');
             } else {
               setState(() => _errorText = null); // Clear error
+              Navigator.pop(context);
               widget.onSave();
             }
           },

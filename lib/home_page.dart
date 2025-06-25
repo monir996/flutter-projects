@@ -64,10 +64,8 @@ class _HomePageState extends State<HomePage> {
             if(index == null){
               _addNewTask(_controller.text);
               _controller.clear();
-              Navigator.pop(context);
             } else {
               _editTask(_controller.text, index);
-              Navigator.pop(context);
             }
           },
           onCancel: () => Navigator.pop(context),
@@ -91,19 +89,24 @@ class _HomePageState extends State<HomePage> {
     // -------------- Filter Tasks ---------
     List filteredTodos = toDoList.where((task) => task[1] != showActiveTask).toList();
 
-    // -------------- Change Task Status ---------
-    void toggleTaskStatus(int index){
-      setState(() {
-        filteredTodos[index][1] = !filteredTodos[index][1];
-      });
-    }
     
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.blueAccent,
         foregroundColor: Colors.white,
-        title: Text('DailyDo', style: TextStyle(fontWeight: FontWeight.bold),),
         centerTitle: true,
+        
+        leading: Icon(Icons.menu),
+        
+        title: Text('DailyDo', style: TextStyle(fontWeight: FontWeight.bold),),
+        
+        actions: [
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 16.0),
+            child: Icon(Icons.settings_outlined),
+          )
+        ],
+        
       ),
 
       floatingActionButton: FloatingActionButton(
@@ -153,60 +156,110 @@ class _HomePageState extends State<HomePage> {
               // ------------------------ List View ------------------
               Expanded(
                 child: Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 10.0),
+                  padding: const EdgeInsets.symmetric(horizontal: 12.0),
 
-                  child: ListView.builder(
-                      itemCount: filteredTodos.length,
-                      itemBuilder: (context, index) {
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
 
-                        return Dismissible(
-                          key: Key(UniqueKey().toString()),
-                          direction: DismissDirection.endToStart,
-                          background: Container(
-                            alignment: Alignment.centerRight,
-                            padding: EdgeInsets.symmetric(horizontal: 20),
-                            decoration: BoxDecoration(
-                              color: Colors.red,
-                              borderRadius: BorderRadius.all(
-                                Radius.circular(10),
-                                //bottomRight: Radius.circular(10),
-                              ),
-                            ),
-                            child: Icon(Icons.delete, color: Colors.white,),
+                      Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                        child: Text(
+                          showActiveTask ? 'Active ToDos' : 'Completed ToDos',
+                          style: Theme.of(context).textTheme.titleLarge?.copyWith(
+                              fontWeight: FontWeight.bold,
+                              color: showActiveTask ? Colors.deepOrange : Colors.green
                           ),
-                          onDismissed: (direction){
-                            if(direction == DismissDirection.endToStart){
-                              deleteTask(index);
-                            }
-                          },
+                        ),
+                      ),
 
-                          // -------------- List Tile ---------
-                          child: Card(
-                            child: Padding(
-                              padding: const EdgeInsets.all(8.0),
-                              child: ListTile(
 
-                                leading: Checkbox(
-                                    shape: CircleBorder(),
-                                    value: filteredTodos[index][1],
-                                    onChanged: (_) => toggleTaskStatus(index)
-                                ),
-                                title: Text(
-                                    filteredTodos[index][0],
-                                    style: TextStyle(
-                                        fontSize: 16,
-                                        decoration: filteredTodos[index][1] ? TextDecoration.lineThrough : null
+                      SizedBox(height: 10),
+
+                      Expanded(
+                        child: ListView.builder(
+                            itemCount: filteredTodos.length,
+                            itemBuilder: (context, index) {
+
+                              return Dismissible(
+                                key: Key(UniqueKey().toString()),
+                                direction: DismissDirection.endToStart,
+
+                                background: Container(
+                                  alignment: Alignment.centerRight,
+                                  padding: EdgeInsets.symmetric(horizontal: 20),
+                                  decoration: BoxDecoration(
+                                    color: Colors.red,
+                                    borderRadius: BorderRadius.all(
+                                      Radius.circular(10),
+                                      //bottomRight: Radius.circular(10),
                                     ),
+                                  ),
+
+                                  child: Icon(Icons.delete, color: Colors.white,),
                                 ),
-                                trailing: IconButton(
-                                    icon: Icon(Icons.edit),
-                                    onPressed: ()=> _showAddTaskDialog(index: index),
+
+                                onDismissed: (direction){
+                                  if(direction == DismissDirection.endToStart){
+                                    final i = toDoList.indexOf(filteredTodos[index]);
+                                    deleteTask(i);
+                                  }
+                                },
+
+                                // -------------- List Tile -----------
+                                child: Card(
+                                  color: Colors.white,
+                                  child: Padding(
+                                    padding: const EdgeInsets.all(8.0),
+
+                                    child: ListTile(
+                                      contentPadding: EdgeInsets.all(8),
+
+                                      leading: Checkbox(
+                                          activeColor: Colors.blueAccent,
+                                          shape: CircleBorder(),
+                                          value: filteredTodos[index][1],
+                                          onChanged: (_){
+                                            setState(() {
+                                              final i = toDoList.indexOf(filteredTodos[index]);
+                                              toDoList[i][1] = !toDoList[i][1];
+                                            });
+                                          }
+                                      ),
+
+                                      title: Text(
+                                          filteredTodos[index][0],
+                                          style: TextStyle(
+                                              fontSize: 16,
+                                              decoration: filteredTodos[index][1] ? TextDecoration.lineThrough : null
+                                          ),
+                                      ),
+
+                                      trailing: Row(
+                                        mainAxisSize: MainAxisSize.min,
+                                        children: [
+                                          IconButton(
+                                              onPressed: ()=> _showAddTaskDialog(index: toDoList.indexOf(filteredTodos[index])),
+                                              icon: Icon(Icons.edit)
+                                          ),
+                                          IconButton(
+                                              onPressed: (){
+                                                final i = toDoList.indexOf(filteredTodos[index]);
+                                                deleteTask(i);
+                                              },
+                                              icon: Icon(Icons.delete)
+                                          ),
+                                        ],
+
+                                      ),
+                                    ),
+                                  ),
                                 ),
-                              ),
-                            ),
-                          ),
-                        );
-                      }
+                              );
+                            }
+                        ),
+                      ),
+                    ],
                   ),
                 ),
               )
