@@ -105,9 +105,11 @@ class _HomePageState extends State<HomePage> {
           margin: EdgeInsets.only(top: 30),
           padding: EdgeInsets.all(24),
 
+
           child: Column(
             children: [
 
+              // -------------- Card Item -----------
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
@@ -137,20 +139,44 @@ class _HomePageState extends State<HomePage> {
               SizedBox(height: 30),
 
               Expanded(
-                child: ListView.builder(
-                  itemCount: filteredTodos.length,
-                  itemBuilder: (context, index){
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
 
-                    final task = filteredTodos[index];
-                    final originalIndex = todoList.indexOf(task);
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                      child: Text(
+                        showActiveTask ? 'Active ToDos' : 'Completed ToDos',
+                        style: Theme.of(context).textTheme.titleLarge?.copyWith(
+                            fontWeight: FontWeight.bold,
+                            color: showActiveTask ? Colors.deepOrange : Colors.blueAccent
+                        ),
+                      ),
+                    ),
 
-                    return TodoTile(
-                        todo: task,
-                        onChanged: ()=> toggleStatus(index),
-                        onEdit: ()=> _showDialogBox(index: originalIndex),
-                        onDelete: ()=> _deleteTask(originalIndex),
-                    );
-                  },
+                    SizedBox(height: 10),
+
+                    Expanded(
+                      child: todoList.isEmpty
+                      ? Center(child: Text('No ToDos yet.'))
+                      : ListView.builder(
+                        itemCount: filteredTodos.length,
+                        itemBuilder: (context, index){
+
+                          final task = filteredTodos[index];
+                          final originalIndex = todoList.indexOf(task);
+
+                          // -------------- List Tile -----------
+                          return TodoTile(
+                              todo: task,
+                              onChanged: ()=> toggleStatus(index),
+                              onEdit: ()=> _showDialogBox(index: originalIndex),
+                              onDelete: ()=> _deleteTask(originalIndex),
+                          );
+                        },
+                      ),
+                    ),
+                  ],
                 ),
               )
             ],
