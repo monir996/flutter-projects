@@ -177,7 +177,7 @@ class _HomePageState extends State<HomePage> {
                       SizedBox(height: 10),
 
                       Expanded(
-                        child: toDoList.isEmpty
+                        child: filteredTodos.isEmpty
                             ? Center(child: Text('No ToDos yet.'))
                             : ListView.builder(
                             itemCount: filteredTodos.length,
