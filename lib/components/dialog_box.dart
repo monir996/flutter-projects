@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
 
 class DialogBox extends StatefulWidget {
+
   final TextEditingController controller;
+  final int? index;
   final VoidCallback onSave;
 
-  const DialogBox({super.key, required this.controller, required this.onSave});
+  const DialogBox({super.key, required this.controller, required this.index, required this.onSave});
 
   @override
   State<DialogBox> createState() => _DialogBoxState();
@@ -16,7 +18,7 @@ class _DialogBoxState extends State<DialogBox> {
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
-      title: Text('Add Todo'),
+      title: Text(widget.index == null ? 'Add Todo' : 'Edit Todo'),
       content: TextField(
         controller: widget.controller,
         decoration: InputDecoration(

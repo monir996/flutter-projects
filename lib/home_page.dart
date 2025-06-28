@@ -42,6 +42,7 @@ class _HomePageState extends State<HomePage> {
         context: context,
         builder: (context)=> DialogBox(
             controller: controller,
+            index: index,
             onSave: (){
               if(index == null){
                 _addNewTask(controller.text);
@@ -157,7 +158,7 @@ class _HomePageState extends State<HomePage> {
                     SizedBox(height: 10),
 
                     Expanded(
-                      child: todoList.isEmpty
+                      child: filteredTodos.isEmpty
                       ? Center(child: Text('No ToDos yet.'))
                       : ListView.builder(
                         itemCount: filteredTodos.length,
